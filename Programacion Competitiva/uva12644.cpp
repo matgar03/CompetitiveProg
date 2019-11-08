@@ -46,6 +46,7 @@ bool bien(const vector<char>& b, const vector <char>& a){
 			else if (b[j] > a[i])return false;
 			else ++j;
 		}
+		if(!found && j >= b.size())return false;
 	}
 	return true;
 }
