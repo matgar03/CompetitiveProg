@@ -62,23 +62,7 @@ public:
     void setLazyUpdate(int vertex, int value) //este es el metodo
     {
 
-        //lazy[vertex] += value;
-
-        if (value == 0)
-        {
-            lazy[vertex] -= 1;
-        }
-        else if (value == 1)
-        {
-            lazy[vertex] += 1;
-        }
-        else
-        {
-            if (lazy[vertex] > 0)
-                lazy[vertex] += 1;
-            else if (lazy[vertex] < 0)
-                lazy[vertex] -= 1;
-        }
+        lazy[vertex] += value;
     }
     void pushLazyUpdate(int vertex, int L, int R)
     {
@@ -151,11 +135,11 @@ void solucion()
         }
         else if (c == 'E')
         {
-            sg.updateRange(a1, a2, 0);
+            sg.updateRange(a1, a2, 2);
         }
         else if (c == 'I')
         {
-            sg.updateRange(a1, a2, -1);
+            sg.updateRange(a1, a2, 3);
         }
         else if (c == 'S')
         {
