@@ -47,9 +47,20 @@ public:
 
         if ((a <= L) && (R <= b))
         {
-
-            setLazyUpdate(vertex, op);
-            pushLazyUpdate(vertex, L, R);
+            if (op == 1)
+            {
+                st[vertex] = R - L + 1;
+            }
+            else if (op == 2)
+            {
+                st[vertex] = 0;
+            }
+            else
+            {
+                st[vertex] = (R - L + 1) - st[vertex];
+            }
+            setLazyUpdate(2 * vertex, op);
+            setLazyUpdate(2 * vertex + 1, op);
             return;
         }
 
@@ -62,11 +73,33 @@ public:
     void setLazyUpdate(int vertex, int value) //este es el metodo
     {
 
-        lazy[vertex] += value;
+        if (value == 1 || value == 2)
+        {
+            lazy[vertex] = value;
+        }
+        else if (value == 3)
+        {
+            lazy[vertex] = cambio(lazy[vertex]);
+        }
     }
     void pushLazyUpdate(int vertex, int L, int R)
     {
-        st[vertex] += (R - L + 1) * lazy[vertex]; //Esta es la linea
+        if (lazy[vertex] != 0)
+        {
+
+            if (lazy[vertex] == 1)
+            {
+                st[vertex] = R - L + 1;
+            }
+            else if (lazy[vertex] == 2)
+            {
+                st[vertex] = 0;
+            }
+            else
+            {
+                st[vertex] = (R - L + 1) - st[vertex];
+            }
+        }
         if (L != R)
         {
             // Tenemos hijos
@@ -74,14 +107,19 @@ public:
             setLazyUpdate(2 * vertex, lazy[vertex]);
             setLazyUpdate(2 * vertex + 1, lazy[vertex]);
         }
+
         lazy[vertex] = 0;
     }
-    void build(string s, int n)
+    int cambio(int v)
+    {
+        return 3 - v;
+    }
+    void build(const string &s, int n)
     {
         tam = n;
         build(s, 1, 0, n - 1);
     }
-    void build(string s, int p, int l, int r)
+    void build(const string &s, int p, int l, int r)
     {
         if (l == r)
         {
@@ -95,6 +133,7 @@ public:
         build(s, 2 * p, l, m);
         build(s, 2 * p + 1, m + 1, r);
         st[p] = st[2 * p] + st[2 * p + 1];
+        lazy[p] = 0;
     }
 };
 
@@ -109,15 +148,16 @@ void solucion()
     {
         cin >> el;
         cin >> aux;
-        for (int j = 1; j < el; ++j)
+        for (int j = 0; j < el; ++j)
         {
-            aux += aux;
+            pir += aux;
         }
-        pir += aux;
     }
 
     int tam = pir.length();
-    SegmentTree sg(tam);
+
+    SegmentTree sg(1024000);
+
     sg.build(pir, tam);
 
     int god;
@@ -128,6 +168,7 @@ void solucion()
     int q = 1;
     for (int i = 0; i < god; ++i)
     {
+
         cin >> c >> a1 >> a2;
         if (c == 'F')
         {
@@ -144,6 +185,7 @@ void solucion()
         else if (c == 'S')
         {
             cout << "Q" << q << ": " << sg.query(a1, a2) << '\n';
+            ++q;
         }
     }
 }
